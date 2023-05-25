@@ -17,9 +17,7 @@ class App extends Component {
     cartList: [],
   }
 
-  addCartItem = product => {
-    this.setState(prevState => ({cartList: [...prevState.cartList, product]}))
-  }
+  
 
   incrementCartItem = id => {
     this.setState(prevState => ({
@@ -62,6 +60,32 @@ class App extends Component {
     )
     this.setState({cartList: updatedCartList})
   }
+  
+    addCartItem = product => {
+    const {cartList} = this.state
+    const productObject = cartList.find(
+      eachCartItem => eachCartItem.id === product.id,
+    )
+
+    if (productObject) {
+      this.setState(prevState => ({
+        cartList: prevState.cartList.map(eachCartItem => {
+          if (productObject.id === eachCartItem.id) {
+            const updatedQuantity = eachCartItem.quantity + product.quantity
+
+            return {...eachCartItem, quantity: updatedQuantity}
+          }
+
+          return eachCartItem
+        }),
+      }))
+    } else {
+      const updatedCartList = [...cartList, product]
+
+      this.setState({cartList: updatedCartList})
+    }
+  }
+  
 
   render() {
     const {cartList} = this.state
